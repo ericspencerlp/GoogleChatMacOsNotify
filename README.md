@@ -9,6 +9,8 @@ never sends messages.
 - Native Notification Center banners, grouped per conversation, with your choice of macOS
   alert sound. Focus modes / Do Not Disturb are respected automatically.
 - Clicking a notification (or a message in the menu) opens that conversation in Google Chat.
+- The menu lists the 10 most recent messages; **Mark All as Seen** resets the unseen icon, and
+  **Clear Recent Messages** (⌘⌫) empties the list and removes delivered notifications.
 - Skips your own messages and anything you've already read on another device (phone, web).
 - Optional filter: only DMs/group chats and @mentions.
 - OAuth 2.0 sign-in in your default browser (PKCE + loopback redirect); tokens stored in the

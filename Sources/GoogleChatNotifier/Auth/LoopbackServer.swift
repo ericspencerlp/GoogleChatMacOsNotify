@@ -4,7 +4,10 @@ import Foundation
 /// A one-shot HTTP listener on 127.0.0.1 used as the OAuth redirect target
 /// (Google's recommended "loopback IP address" flow for desktop apps).
 /// Implemented with plain BSD sockets: bind to 127.0.0.1 on an OS-assigned port.
-final class LoopbackServer {
+///
+/// `@unchecked Sendable`: every mutable property is only read or written on `queue`
+/// (a private serial queue), which provides the synchronization the compiler can't verify.
+final class LoopbackServer: @unchecked Sendable {
     private let queue = DispatchQueue(label: "com.lendingpad.GoogleChatNotifier.loopback")
     private var listenFD: Int32 = -1
     private var acceptSource: DispatchSourceRead?

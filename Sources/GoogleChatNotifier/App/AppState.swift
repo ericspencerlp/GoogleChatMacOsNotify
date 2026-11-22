@@ -161,6 +161,13 @@ final class AppState: ObservableObject {
         Notifier.shared.removeAllDelivered()
     }
 
+    /// Empties the "Recent" list in the menu (and clears delivered notifications).
+    /// Doesn't affect Google Chat itself; only messages arriving after this will show up.
+    func clearRecent() {
+        recent.removeAll()
+        markAllSeen()
+    }
+
     func saveClientConfig(_ config: OAuthClientConfig) async throws {
         try await auth.setClientConfig(config)
         isConfigured = true

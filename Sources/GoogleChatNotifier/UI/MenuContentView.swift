@@ -26,6 +26,8 @@ struct MenuContentView: View {
                 }
                 Button("Mark All as Seen") { state.markAllSeen() }
                     .disabled(state.unseenCount == 0)
+                Button("Clear Recent Messages") { state.clearRecent() }
+                    .keyboardShortcut(.delete)
             }
 
             Divider()
