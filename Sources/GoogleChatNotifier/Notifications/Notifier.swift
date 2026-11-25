@@ -39,7 +39,7 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
             content.body = count > 1 ? "\(count) new messages" : "New message"
         }
 
-        content.sound = SoundCatalog.notificationSound(for: settings.soundName)
+        content.sound = nil  // AppState plays (and repeats) the sound itself.
         content.threadIdentifier = update.spaceName          // groups notifications per conversation
         content.userInfo = ["url": last.url.absoluteString]
         content.interruptionLevel = .active
@@ -76,7 +76,7 @@ final class Notifier: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.banner, .list, .sound])
+        completionHandler([.banner, .list])
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,

@@ -23,6 +23,8 @@ struct GeneralSettingsView: View {
     @AppStorage(Prefs.soundName) private var soundName: String = SoundCatalog.systemDefault
     @AppStorage(Prefs.showPreview) private var showPreview = true
     @AppStorage(Prefs.includeBots) private var includeBots = true
+    @AppStorage(Prefs.reminderInterval) private var reminderInterval: Double = 60
+    @AppStorage(Prefs.flashIcon) private var flashIcon = true
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var loginItemError: String?
 
@@ -53,6 +55,13 @@ struct GeneralSettingsView: View {
                     .help("Preview sound")
                     .disabled(soundName == SoundCatalog.none)
                 }
+                Picker("Repeat sound until seen (up to 5 min)", selection: $reminderInterval) {
+                    Text("Never").tag(0.0)
+                    Text("Every 30 seconds").tag(30.0)
+                    Text("Every minute").tag(60.0)
+                    Text("Every 2 minutes").tag(120.0)
+                }
+                Toggle("Flash menu bar icon on new messages", isOn: $flashIcon)
                 Picker("Check for new messages", selection: $pollInterval) {
                     Text("Every 15 seconds").tag(15.0)
                     Text("Every 30 seconds").tag(30.0)
@@ -85,11 +94,7 @@ struct GeneralSettingsView: View {
     }
 
     private func playPreview() {
-        if soundName == SoundCatalog.systemDefault {
-            NSSound.beep()
-        } else {
-            NSSound(named: NSSound.Name(soundName))?.play()
-        }
+        SoundCatalog.play(soundName)
     }
 
     private func setLaunchAtLogin(_ enabled: Bool) {

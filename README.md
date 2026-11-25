@@ -4,10 +4,13 @@ A small native macOS menu bar app that watches your Google Chat conversations an
 native macOS notifications (with sound) when new messages arrive. It is **read-only** — it
 never sends messages.
 
-- Lives in the menu bar (no Dock icon). The icon fills in when you have unseen messages and
-  shows a bell-with-slash when notifications are paused.
-- Native Notification Center banners, grouped per conversation, with your choice of macOS
-  alert sound. Focus modes / Do Not Disturb are respected automatically.
+- Lives in the menu bar (no Dock icon). The icon turns orange while you have unseen messages,
+  flashes when they arrive, and shows a bell-with-slash when notifications are paused.
+- Native Notification Center banners, grouped per conversation. The app plays your chosen
+  macOS alert sound itself and can repeat it (every 30 s – 2 min) for up to 5 minutes after
+  the latest message, or until the messages are seen — clicking them, **Mark All as Seen**,
+  or reading them in Google Chat. Banners respect Focus / Do Not Disturb; the app's own sound does not — use
+  **Pause Notifications** to silence it.
 - Clicking a notification (or a message in the menu) opens that conversation in Google Chat.
 - The menu lists the 10 most recent messages; **Mark All as Seen** resets the unseen icon, and
   **Clear Recent Messages** (⌘⌫) empties the list and removes delivered notifications.

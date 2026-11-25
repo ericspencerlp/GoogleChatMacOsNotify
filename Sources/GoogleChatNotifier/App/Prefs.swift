@@ -1,5 +1,5 @@
+import AppKit
 import Foundation
-import UserNotifications
 
 /// UserDefaults keys and typed accessors for user-facing settings.
 enum Prefs {
@@ -9,6 +9,8 @@ enum Prefs {
     static let showPreview = "showMessagePreview"
     static let includeBots = "includeBotMessages"
     static let paused = "notificationsPaused"
+    static let reminderInterval = "reminderIntervalSeconds"
+    static let flashIcon = "flashMenuBarIcon"
 
     static func registerDefaults() {
         UserDefaults.standard.register(defaults: [
@@ -18,12 +20,19 @@ enum Prefs {
             showPreview: true,
             includeBots: true,
             paused: false,
+            reminderInterval: 60.0,
+            flashIcon: true,
         ])
     }
 
     static var pollIntervalSeconds: TimeInterval {
         let value = UserDefaults.standard.double(forKey: pollInterval)
         return value >= 10 ? value : 30
+    }
+
+    /// How often to replay the sound while messages are unseen; 0 = never.
+    static var reminderIntervalSeconds: TimeInterval {
+        max(0, UserDefaults.standard.double(forKey: reminderInterval))
     }
 }
 
@@ -59,8 +68,8 @@ struct NotifySettings: Sendable {
     }
 }
 
-/// Sounds offered in Settings. System sounds are copied into the app bundle by the
-/// build script so that `UNNotificationSound(named:)` can find them.
+/// Sounds offered in Settings. The app plays the sound itself (rather than attaching it to the
+/// notification) so it is heard reliably and can be repeated while messages are unseen.
 enum SoundCatalog {
     static let none = "None"
     static let systemDefault = "Default"
@@ -75,11 +84,15 @@ enum SoundCatalog {
         return [none, systemDefault] + system
     }
 
-    static func notificationSound(for name: String) -> UNNotificationSound? {
+    @MainActor
+    static func play(_ name: String) {
         switch name {
-        case none: return nil
-        case systemDefault: return .default
-        default: return UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(name).aiff"))
+        case none: return
+        case systemDefault: NSSound.beep()
+        default:
+            guard let sound = NSSound(named: NSSound.Name(name)) else { return NSSound.beep() }
+            sound.stop()
+            sound.play()
         }
     }
 }

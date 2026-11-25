@@ -12,7 +12,8 @@ struct GoogleChatNotifierApp: App {
             MenuContentView()
                 .environmentObject(state)
         } label: {
-            Image(systemName: state.menuBarSymbol)
+            Image(nsImage: MenuBarIcon.image(symbol: state.menuBarSymbol,
+                                             highlighted: state.menuBarIsHighlighted))
                 .accessibilityLabel("Google Chat Notifier")
         }
         .menuBarExtraStyle(.menu)

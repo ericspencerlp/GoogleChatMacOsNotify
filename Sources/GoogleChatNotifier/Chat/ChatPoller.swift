@@ -150,8 +150,7 @@ actor ChatPoller {
             guard !candidates.isEmpty else { continue }
 
             // Skip anything already read on another device (phone, another computer, web).
-            if let readState = try? await chat.readState(space: space.name),
-               let lastRead = readState.lastReadTime.flatMap(RFC3339.parse) {
+            if let lastRead = await lastReadTime(space: space.name) {
                 candidates = candidates.filter { $0.2 > lastRead }
             }
             guard !candidates.isEmpty else { continue }
@@ -187,6 +186,20 @@ actor ChatPoller {
         state.lastPollStart = pollStart
         save()
         return updates
+    }
+
+    /// Last-read times for the given spaces (one API call each); spaces that fail are omitted.
+    func lastReadTimes(spaces: Set<String>) async -> [String: Date] {
+        var result: [String: Date] = [:]
+        for space in spaces {
+            if let lastRead = await lastReadTime(space: space) { result[space] = lastRead }
+        }
+        return result
+    }
+
+    private func lastReadTime(space: String) async -> Date? {
+        guard let readState = try? await chat.readState(space: space) else { return nil }
+        return readState.lastReadTime.flatMap(RFC3339.parse)
     }
 
     private func title(for space: ChatSpace, sender: String) -> String {

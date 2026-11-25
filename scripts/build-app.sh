@@ -32,8 +32,7 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/$EXECUTABLE" "$APP/Contents/MacOS/$EXECUTABLE"
 cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
 
-# Notification sounds: UNNotificationSound(named:) only finds sounds inside the app bundle,
-# so bundle copies of the built-in macOS alert sounds.
+# Bundle copies of the built-in macOS alert sounds (played by the app via NSSound).
 for sound in /System/Library/Sounds/*.aiff; do
   [ -e "$sound" ] && cp "$sound" "$APP/Contents/Resources/"
 done
